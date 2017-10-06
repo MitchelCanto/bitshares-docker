@@ -1,4 +1,4 @@
-FROM bitshares/bitshares-2
+FROM bitshares/bitshares-2:testnet
 MAINTAINER Fabian Schuh <Fabian@cryptonomex.com>
 
 ## Copying default configuration
