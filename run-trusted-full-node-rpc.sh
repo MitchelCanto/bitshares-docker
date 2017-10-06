@@ -1,6 +1,7 @@
 #!/bin/bash
 
-docker run $* --name trusted-full-node \
+docker run $* --name bitshares_witness \
+           --volumes-from bitshares-data \
            -p 9090:9090 \
            -p 8090:8090 \
-           bitshares/bitshares-2-trusted-full-node
+           bitshares/witness:testnet
