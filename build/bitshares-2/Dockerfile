@@ -1,4 +1,4 @@
-FROM ubuntu:15.04
+FROM ubuntu:16.04
 MAINTAINER Fabian Schuh <Fabian@cryptonomex.com>
 
 ARG tag
@@ -6,12 +6,12 @@ ARG tag
 ## Core Utilities
 RUN apt-get update && \
     apt-get -y upgrade && \
-    apt-get install -y autoconf \
+    apt-get install -y install autoconf  \
                        autotools-dev \
                        build-essential \
                        cmake \
-                       gcc-4.9 \
-                       g++-4.9 \
+                       gcc \
+                       g++ \
                        git \
                        libbz2-dev \
                        libdb++-dev \
@@ -23,26 +23,24 @@ RUN apt-get update && \
                        make \
                        openssl \
                        python-dev \
-                       wget
-
-## Boost 1.57
-WORKDIR /
-RUN wget -c 'http://sourceforge.net/projects/boost/files/boost/1.57.0/boost_1_57_0.tar.bz2/download' \
-         -O /boost_1_57_0.tar.bz2 && \
-    tar xjf /boost_1_57_0.tar.bz2
-WORKDIR boost_1_57_0/
-RUN ./bootstrap.sh "--prefix=/opt/boost_1_57_0" && \
-    ./b2 install
+                       wget \
+                       libboost-all-dev \
+                       libcurl4-openssl-dev \
+                       && \
+                          apt-get update -y && \
+                          apt-get install -y fish && \
+                          apt-get clean && \
+                          rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 ## Fetching BitShares-2
 WORKDIR /
-RUN git clone -b "$tag" https://github.com/BitSharesEurope/testnet.git /bitshares-2-git && \
+RUN git clone -b "$tag" https://github.com/bitshares/bitshares-core.git /bitshares-2-git && \
     git -C /bitshares-2-git submodule update --init --recursive
 
 ## Building BitShares-2
 RUN mkdir /build
 WORKDIR /build
-RUN CC=gcc-4.9 CXX=g++-4.9 cmake -DBOOST_ROOT="/opt/boost_1_57_0" -DCMAKE_BUILD_TYPE=Release /bitshares-2-git && \
+RUN cmake -DCMAKE_BUILD_TYPE=Release /bitshares-2-git && \
     make || make -j 1
 
 RUN mkdir /bitshares-2 && \
@@ -50,7 +48,5 @@ RUN mkdir /bitshares-2 && \
 
 ## Cleanup to reduce container size
 WORKDIR /
-RUN rm -rf /boost_1_57_0.tar.bz2 \
-           /boost_1_57_0 \
-           /bitshares-2-git \
+RUN rm -rf /bitshares-2-git \
            /build
