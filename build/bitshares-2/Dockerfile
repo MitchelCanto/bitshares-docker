@@ -4,9 +4,10 @@ MAINTAINER Fabian Schuh <Fabian@cryptonomex.com>
 ARG tag
 
 ## Core Utilities
-RUN apt-get update && \
+RUN \
+    apt-get update -y && \
     apt-get -y upgrade && \
-    apt-get install -y install autoconf  \
+    apt-get install -y autoconf  \
                        autotools-dev \
                        build-essential \
                        cmake \
@@ -25,12 +26,14 @@ RUN apt-get update && \
                        python-dev \
                        wget \
                        libboost-all-dev \
+                       libncurses-dev \
+                       doxygen \
                        libcurl4-openssl-dev \
                        && \
-                          apt-get update -y && \
-                          apt-get install -y fish && \
-                          apt-get clean && \
-                          rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+    apt-get update -y && \
+    apt-get install -y fish && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 ## Fetching BitShares-2
 WORKDIR /

@@ -1,5 +1,7 @@
 FROM nginx
-MAINTAINER Fabian Schuh <Fabian@cryptonomex.com>
+LABEL original_maintainer="Fabian Schuh <Fabian@cryptonomex.com>"
+LABEL modified_by="Daniel Castaneda <daniel@kwantec.com>"
+ARG ui_tag=2.0.180108
 
 ## Mount external data into the container
 VOLUME ["/www", "/conf"]

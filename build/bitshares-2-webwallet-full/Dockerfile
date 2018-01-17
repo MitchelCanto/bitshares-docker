@@ -1,21 +1,36 @@
-FROM ubuntu:15.04
-MAINTAINER Fabian Schuh <Fabian@cryptonomex.com>
+FROM ubuntu:16.04
+LABEL original_maintainer="Fabian Schuh <Fabian@cryptonomex.com>"
+LABEL modified_by="Daniel Castaneda <daniel@kwantec.com>"
+ARG ui_tag=2.0.180108
 
 ## Core Utilities
 RUN apt-get update
 RUN apt-get -y upgrade
-RUN apt-get install -y nodejs-legacy npm git nginx
-RUN npm install -g coffee-script
+# RUN apt-get install -y nodejs npm git nginx
 
-RUN git clone http://github.com/bitshares/bitshares-2-ui /build
+RUN apt-get install -y curl
+
+# RUN curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.30.2/install.sh | bash
+# RUN nvm install v6
+# RUN nvm use v6
+
+RUN curl -sL https://deb.nodesource.com/setup_8.x -o nodesource_setup.sh
+RUN bash nodesource_setup.sh
+RUN apt-get install -y nodejs build-essential git nginx
+RUN npm install -g coffeescript
+
+RUN git clone -b "$ui_tag" https://github.com/bitshares/bitshares-ui.git /build
 WORKDIR /build
-RUN for I in cli dl web; do cd $I; npm install; cd ..; done 
 
-WORKDIR /build/web
+RUN npm install
 RUN npm run build
 
 RUN mkdir /www
-RUN cp -rv /build/web/dist/* /www/
+
+WORKDIR /build/build/dist
+RUN cp -rv * /www/
+
+WORKDIR /build
 
 ADD nginx.conf /etc/nginx/nginx.conf
 
