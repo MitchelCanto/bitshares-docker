@@ -5,8 +5,8 @@ LABEL original_maintainer="Fabian Schuh <Fabian@cryptonomex.com>"
 LABEL modified_by="Daniel Castaneda <daniel@kwantec.com>"
 
 ## Copying default configuration
-ADD docker/start.sh /start.sh
-RUN chmod a+x /start.sh
+ADD docker/start.sh /bitshares-2/start.sh
+RUN chmod ug+x /bitshares-2/start.sh
 
 ## Entry point
-ENTRYPOINT ["/start.sh"]
+ENTRYPOINT ["/bitshares-2/start.sh"]

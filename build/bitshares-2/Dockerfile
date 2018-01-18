@@ -2,6 +2,8 @@ FROM ubuntu:16.04
 MAINTAINER Fabian Schuh <Fabian@cryptonomex.com>
 
 ARG tag
+ARG myuid=1001
+#ARG user_pwd
 
 ## Core Utilities
 RUN \
@@ -35,6 +37,8 @@ RUN \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
+
+
 ## Fetching BitShares-2
 WORKDIR /
 RUN git clone -b "$tag" https://github.com/bitshares/bitshares-core.git /bitshares-2-git && \
@@ -46,10 +50,29 @@ WORKDIR /build
 RUN cmake -DCMAKE_BUILD_TYPE=Release /bitshares-2-git && \
     make || make -j 1
 
+RUN groupadd --system bitshares
+RUN useradd --system --shell /bin/bash --uid ${myuid} --gid bitshares bitshares
+
 RUN mkdir /bitshares-2 && \
     cp -r /build/programs /bitshares-2/
+
+RUN chown -R bitshares.bitshares /bitshares-2
 
 ## Cleanup to reduce container size
 WORKDIR /
 RUN rm -rf /bitshares-2-git \
            /build
+
+USER bitshares
+WORKDIR /
+
+
+# ADD scripts/makeuser.sh /makeuser.sh
+# RUN chmod ug+x /makeuser.sh
+# RUN ./makeuser.sh bitshares ${user_pwd}
+# RUN chown -R bitshares.bitshares /bitshares-2
+# USER bitshares
+# ENV HOME /home/bitshares
+
+# Just in case Delete bash history so that passwords used when switchin g user are not there
+# RUN history -c
