@@ -1,24 +1,19 @@
 #!/bin/bash
 
-if [ $1 ]; then
-  myip=$1
-else
-  myip=127.0.0.1
-fi
+source build/bash-ini-parser/bash-ini-parser
 
-if [ $2 ]; then
-  myport=$2
-else
-  myport=8092
-fi
+cfg_parser config.ini
 
-#echo "Will run cli-wallet against ${myip}:${myport}"
+echo "===== LOADED config.ini: ==========================="
+cfg_writer
+echo "===== END OF LOADED CONFIG from config.ini ========="
+echo ""
 
 docker run $* --name cli-wallet \
            --link trusted-full-node \
            -p 127.0.0.1:8092:8092 \
            -it \
-           bitshares/bitshares-2-cli-wallet
+           bitshares/bitshares-2-cli-wallet:${TAG}
 
 
 # docker run $* --name cli-wallet \

@@ -9,10 +9,9 @@ cfg_writer
 echo "===== END OF LOADED CONFIG from config.ini ========="
 echo ""
 
-setup_data_dir "data_delayed_node"
-
-docker run $* --name delayed-node \
+docker run $* -d --name cli-wallet \
            --link trusted-full-node \
-           -p 127.0.0.1:8091:8091 \
-           --mount type=bind,source=${MY_DATA_DIR},target=/data \
-           bitshares/bitshares-2-delayed-node:${TAG}
+           -p 80:80 \
+           -v $PWD/web-wallet-data/www:/www \
+           -v $PWD/web-wallet-data/conf:/conf \
+           bitshares/bitshares-2-webwallet-full:${UI_TAG}

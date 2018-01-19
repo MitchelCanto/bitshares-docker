@@ -1,0 +1,23 @@
+setup_data_dir(){
+  MY_DATA_DIR="${DATA_DIR}/${1}"
+
+  echo "MY_DATA_DIR: ${MY_DATA_DIR}"
+
+  if [ ! -d "${MY_DATA_DIR}" ]; then
+    mkdir ${MY_DATA_DIR}
+  fi
+
+  local DIR_OWNER_UID=$(stat -c '%u' ${MY_DATA_DIR})
+
+  echo "DIR_OWNER_UID: ${DIR_OWNER_UID}"
+  echo "MYUID: ${MYUID}"
+
+  if [ ! ${DIR_OWNER_UID} = ${MYUID} ]; then
+    echo "This script MUST be run by the same user of UID ${MYUID}"
+    echo "Will try to change ownership of data directory ${MY_DATA_DIR} "
+    echo "to user with UID ${MYUID},"
+    echo "This may fail if current user does not have the permissions "
+    echo "required for this chown operation"
+    chown -R ${MYUID}: ${MY_DATA_DIR}
+  fi
+}

@@ -12,11 +12,25 @@
 # echo "${curdir}/bitshares-data/data_trusted_node,target=/data_trusted_node"
 # --mount type=volume,source==${curdir}/bitshares-data/data_trusted_node,target=/data_trusted_node \
 
+source build/bash-ini-parser/bash-ini-parser
+source build/scriptslib
+
+
+cfg_parser config.ini
+
+echo "===== LOADED config.ini: ==========================="
+cfg_writer
+echo "===== END OF LOADED CONFIG from config.ini ========="
+echo ""
+
+
+setup_data_dir "data_trusted_node"
+
 docker run $* --name trusted-full-node \
-             -p 9090:9090 \
-             -p 8090:8090 \
-             --mount type=volume,source=data_trusted_node,target=/data_trusted_node \
-             bitshares/bitshares-2-trusted-full-node
+              -p 9090:9090 \
+              -p 8090:8090 \
+              --mount type=bind,source=${MY_DATA_DIR},target=/data \
+              bitshares/bitshares-2-trusted-full-node:${TAG}
 
 
 # docker run $* --name bitshares_witness \

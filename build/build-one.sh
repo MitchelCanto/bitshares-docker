@@ -1,19 +1,19 @@
 #!/bin/bash
 
-export TAG=2.0.171212
-export UI_TAG=2.0.180108
-export MEMORY=8g
-export CPUS=4
-export MYUID=1001
+
+source bash-ini-parser/bash-ini-parser
+
+cfg_parser ../config.ini
+
+echo "===== LOADED config.ini: ==========================="
+cfg_writer
+echo "===== END OF LOADED CONFIG from config.ini ========="
+echo ""
 
 print_usage(){
   echo "Missing required parameter, Usage:"
-  echo "    ./build-one all <bitshares user PWD>     Builds Docker images for ALL Bitshares Projects"
-  echo "                                                 'bitshares user PWD' will be the unencrypted password"
-  echo "                                                 for the linux user 'bitshares' that will be created inside"
-  echo "                                                 the Ubuntu in the images to run the processes"
-  echo "                                                 (in order to not run as root for security)"
-  echo "    ./build-one core <bitshares user PWD>    Builds the base Node docker image. "
+  echo "    ./build-one all           Builds Docker images for ALL Bitshares Projects"
+  echo "    ./build-one core          Builds the base Node docker image. "
   echo "                                                This be done before the others as it is used as"
   echo "                                                base Docker image for the rest of the images."
   echo "    ./build-one cli           Builds the Docker image for the Bitshares cli-wallet"
@@ -71,7 +71,7 @@ case $1 in
       echo "     Docker container CPUs: ${CPUS}"
       echo "This will take a while, please be patient"
       echo "  script by Daniel Castaneda <daniel@kwantec.com>"
-      docker build -m ${MEMORY} -c ${CPUS} -t bitshares/bitshares-2-delayed-node --build-arg tag=${TAG} bitshares-2-delayed-node
+      docker build -m ${MEMORY} -c ${CPUS} -t bitshares/bitshares-2-delayed-node:${TAG} --build-arg tag=${TAG} bitshares-2-delayed-node
     ;;
   full)
       echo "Building the Full Node Docker image for BitShares"
@@ -82,7 +82,7 @@ case $1 in
       echo "     Docker container CPUs: ${CPUS}"
       echo "This will take a while, please be patient"
       echo "  script by Daniel Castaneda <daniel@kwantec.com>"
-      docker build -m ${MEMORY} -c ${CPUS} -t bitshares/bitshares-2-trusted-full-node --build-arg tag=${TAG} bitshares-2-trusted-full-node
+      docker build -m ${MEMORY} -c ${CPUS} -t bitshares/bitshares-2-trusted-full-node:${TAG} --build-arg tag=${TAG} bitshares-2-trusted-full-node
     ;;
   ngnix)
       echo "Building the Docker image for a nginx Web Server"
@@ -95,7 +95,7 @@ case $1 in
       echo "     Docker container CPUs: ${CPUS}"
       echo "This will take a while, please be patient"
       echo "  script by Daniel Castaneda <daniel@kwantec.com>"
-      docker build -m ${MEMORY} -c ${CPUS} -t bitshares/bitshares-2-webwallet --build-arg ui_tag=${UI_TAG} bitshares-2-webwallet
+      docker build -m ${MEMORY} -c ${CPUS} -t bitshares/bitshares-2-webwallet:${UI_TAG} --build-arg ui_tag=${UI_TAG} bitshares-2-webwallet
     ;;
   web)
       echo "Building the the Docker Image for the BitShares-ui Web Project"
@@ -108,7 +108,7 @@ case $1 in
       echo "     Docker container CPUs: ${CPUS}"
       echo "This will take a while, please be patient"
       echo "  script by Daniel Castaneda <daniel@kwantec.com>"
-      docker build -m ${MEMORY} -c ${CPUS} -t bitshares/bitshares-2-webwallet-full --build-arg ui_tag=${UI_TAG} bitshares-2-webwallet-full
+      docker build -m ${MEMORY} -c ${CPUS} -t bitshares/bitshares-2-webwallet-full:${UI_TAG} --build-arg ui_tag=${UI_TAG} bitshares-2-webwallet-full
     ;;
   all)
       # if [ -z "$2" ]
@@ -131,9 +131,9 @@ case $1 in
       echo "============STARTING CLI WALLET IMAGE==============================================================="
       docker build -m ${MEMORY} -c ${CPUS} -t bitshares/bitshares-2-cli-wallet --build-arg tag=${TAG} bitshares-2-cli-wallet
       echo "============STARTING DELAYED NODE IMAGE============================================================="
-      docker build -m ${MEMORY} -c ${CPUS} -t bitshares/bitshares-2-delayed-node --build-arg tag=${TAG} bitshares-2-delayed-node
+      docker build -m ${MEMORY} -c ${CPUS} -t bitshares/bitshares-2-delayed-node:${TAG} --build-arg tag=${TAG} bitshares-2-delayed-node
       echo "============STARTING FULL NODE IMAGE================================================================"
-      docker build -m ${MEMORY} -c ${CPUS} -t bitshares/bitshares-2-trusted-full-node --build-arg tag=${TAG} bitshares-2-trusted-full-node
+      docker build -m ${MEMORY} -c ${CPUS} -t bitshares/bitshares-2-trusted-full-node:${TAG} --build-arg tag=${TAG} bitshares-2-trusted-full-node
       echo "============STARTING NGNIX IMAGE===================================================================="
       docker build -m ${MEMORY} -c ${CPUS} -t bitshares/bitshares-2-webwallet-full --build-arg ui_tag=${UI_TAG} bitshares-2-webwallet-full
       echo "============STARTING WEB FULL IMAGE================================================================="
