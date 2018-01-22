@@ -60,7 +60,7 @@ case $1 in
       echo "     Docker container CPUs: ${CPUS}"
       echo "This will take a while, please be patient"
       echo "  script by Daniel Castaneda <daniel@kwantec.com>"
-      docker build -m ${MEMORY} -c ${CPUS} -t bitshares/bitshares-2-cli-wallet --build-arg tag=${TAG} bitshares-2-cli-wallet
+      docker build -m ${MEMORY} -c ${CPUS} -t bitshares/bitshares-2-cli-wallet:${TAG} --build-arg tag=${TAG} bitshares-2-cli-wallet
     ;;
   delayed)
       echo "Building the Delayed Node Docker image for BitShares"
@@ -129,7 +129,7 @@ case $1 in
       #docker build -m ${MEMORY} -c ${CPUS} -t bitshares/bitshares-2 --build-arg tag=${TAG} --build-arg user_pwd=$2 bitshares-2
       docker build -m ${MEMORY} -c ${CPUS} -t bitshares/bitshares-2:${TAG} --build-arg tag=${TAG} --build-arg myuid=${MYUID} bitshares-2
       echo "============STARTING CLI WALLET IMAGE==============================================================="
-      docker build -m ${MEMORY} -c ${CPUS} -t bitshares/bitshares-2-cli-wallet --build-arg tag=${TAG} bitshares-2-cli-wallet
+      docker build -m ${MEMORY} -c ${CPUS} -t bitshares/bitshares-2-cli-wallet:${TAG} --build-arg tag=${TAG} bitshares-2-cli-wallet
       echo "============STARTING DELAYED NODE IMAGE============================================================="
       docker build -m ${MEMORY} -c ${CPUS} -t bitshares/bitshares-2-delayed-node:${TAG} --build-arg tag=${TAG} bitshares-2-delayed-node
       echo "============STARTING FULL NODE IMAGE================================================================"

@@ -5,7 +5,9 @@ setup_data_dir(){
 
   if [ ! -d "${MY_DATA_DIR}" ]; then
     mkdir ${MY_DATA_DIR}
+    mkdir ${MY_DATA_DIR}/run-logs
   fi
+
 
   local DIR_OWNER_UID=$(stat -c '%u' ${MY_DATA_DIR})
 
