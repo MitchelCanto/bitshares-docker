@@ -19,4 +19,4 @@ ENTRYPOINT ["/bitshares-2/start.sh"]
 
 # Optional parameters (if supplied then all 3 are required)
 # witness-id, witness-key1, witness-key2
-CMD["","",""]
+CMD ["","",""]
